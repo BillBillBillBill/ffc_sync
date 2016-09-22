@@ -1,10 +1,6 @@
 # coding: utf-8
 from peewee import *
 from playhouse.sqlite_ext import SqliteExtDatabase
-from config import FIREFOX_COOKIE_PATH
-
-
-db = SqliteExtDatabase(FIREFOX_COOKIE_PATH)
 
 
 class MOZCookies(Model):
@@ -44,11 +40,12 @@ class MOZCookies(Model):
 
     class Meta:
         db_table = 'moz_cookies'
-        database = db
+        database = SqliteExtDatabase('default.sqlite')
         indexes = (
             # create a unique index
             (('name', 'host', 'path', 'originAttributes'), True),
             (('baseDomain', 'originAttributes'), False),
+            (('creationTime'), False),
         )
 
     @classmethod
@@ -120,6 +117,10 @@ class MOZCookies(Model):
         """
         query = cls.select().where(cls.creationTime > creationTime).order_by(cls.creationTime.desc())
         return [cookie.to_json() for cookie in query]
+
+    @staticmethod
+    def set_db(db_path):
+        MOZCookies._meta.database.database = db_path
 
 
 if __name__ == '__main__':
