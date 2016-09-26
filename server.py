@@ -1,5 +1,5 @@
 # coding: utf-8
-from config import SECRET_KEY
+from config import SYNC_KEY
 from flask import Flask, request, jsonify
 from model import MOZCookies
 
@@ -10,8 +10,8 @@ app = Flask(__name__)
 @app.route('/sync', methods=['POST'])
 def sync():
     data = request.json
-    secret_key = data.get('secret_key')  # 暂时先这样验证
-    if secret_key != SECRET_KEY:
+    secret_key = data.get('secret_key')
+    if secret_key != SYNC_KEY:
         return jsonify({'error_msg': 'secret_key not match!'})
     cookies = data.get('cookies')
     final_time = data.get('final_time')
@@ -26,7 +26,7 @@ def sync():
 
 
 def ensure_db():
-    MOZCookies.set_db('%s.sqlite' % SECRET_KEY)
+    MOZCookies.set_db('%s.sqlite' % SYNC_KEY)
     if not MOZCookies.table_exists():
         MOZCookies.create_table()
 

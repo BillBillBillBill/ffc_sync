@@ -1,5 +1,5 @@
 # coding: utf-8
-from config import SECRET_KEY, SYNC_API
+from config import SYNC_KEY, SYNC_API
 import requests
 import time
 import os
@@ -20,7 +20,7 @@ def start_sync(cookie_db_path):
     final_time = 0
     while True:
         try:
-            print '========sync %d times=========' % sync_count
+            print '========The %d time to sync=========' % sync_count
             if sync_count == 0:
                 # 第一次同步 全推 全拉
                 upload_cookies = MOZCookies.get_cookies_after(0)
@@ -34,7 +34,7 @@ def start_sync(cookie_db_path):
             ret = requests.post(
                 SYNC_API,
                 json={
-                    'secret_key': SECRET_KEY,
+                    'secret_key': SYNC_KEY,
                     'cookies': upload_cookies,
                     'final_time': final_time
                 }

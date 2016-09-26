@@ -45,7 +45,7 @@ class MOZCookies(Model):
             # create a unique index
             (('name', 'host', 'path', 'originAttributes'), True),
             (('baseDomain', 'originAttributes'), False),
-            (('creationTime'), False),
+            (('creationTime', ), False),
         )
 
     @classmethod
